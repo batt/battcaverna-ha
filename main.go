@@ -22,14 +22,16 @@ func main() {
 	}
 
 	// Open up a connection
-	conn, err := net.ListenMulticastUDP("udp", nil, addr)
+	read_conn, err := net.ListenMulticastUDP("udp", nil, addr)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	conn.SetReadBuffer(maxDatagramSize)
+	write_conn, err := net.DialUDP("udp", nil, addr)
 
-	c := controller.NewController(conn)
+	read_conn.SetReadBuffer(maxDatagramSize)
+
+	c := controller.NewController(read_conn, write_conn)
 	d := devices.DummyDevice{}
 	c.RegisterDevice(&d, []string{"dummy"})
 	c.Run()
