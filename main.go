@@ -3,6 +3,10 @@ package main
 import (
 	"log"
 	"net"
+
+	"github.com/batt/battcaverna-ha/devices"
+
+	"github.com/batt/battcaverna-ha/controller"
 )
 
 const (
@@ -25,15 +29,8 @@ func main() {
 
 	conn.SetReadBuffer(maxDatagramSize)
 
-	// Loop forever reading from the socket
-	for {
-		buffer := make([]byte, maxDatagramSize)
-		numBytes, src, err := conn.ReadFromUDP(buffer)
-		if err != nil {
-			log.Fatal("ReadFromUDP failed:", err)
-		}
-
-		log.Println(numBytes, "bytes read from", src)
-		log.Println(string(buffer[:numBytes]))
-	}
+	c := controller.NewController(conn)
+	d := devices.DummyDevice{}
+	c.RegisterDevice(&d, []string{"dummy"})
+	c.Run()
 }
