@@ -52,7 +52,7 @@ func NewPin(port GPIOPort, pin int, d Direction) *Pin {
 		defer f.Close()
 
 		// export pin
-		_, err = f.WriteString(fmt.Sprint(int(portNumber[port]) + pin))
+		_, err = f.WriteString(fmt.Sprint(portNumber[port] + pin))
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -119,7 +119,7 @@ func (p *Pin) Close() {
 	}
 	defer f.Close()
 
-	_, err = f.WriteString(fmt.Sprint(int(portNumber[p.port]) + p.pin))
+	_, err = f.WriteString(fmt.Sprint(portNumber[p.port] + p.pin))
 	if err != nil {
 		log.Fatal(err)
 	}
