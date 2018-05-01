@@ -12,3 +12,12 @@
 
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
+
+*.o
+*.profile
+Session.vim
+cmd/gpio/gpio
+cmd/battcaverna/battcaverna
+cover.out
+tags
+.DS_Store
