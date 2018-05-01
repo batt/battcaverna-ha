@@ -24,7 +24,7 @@ BUILD = go build -ldflags '-X "main.version=$(VERSION)"'
 #
 
 # default
-all: pre-build $(BUILDPKGS)
+all: $(BUILDPKGS)
 
 $(BUILDPKGS):
 	$(INFO)
@@ -33,7 +33,7 @@ $(BUILDPKGS):
 .PHONY: all $(BUILDPKGS)
 
 # ARM
-arm: pre-build $(ARMPKGS)
+arm: $(ARMPKGS)
 
 $(ARMPKGS):
 	$(INFO)
@@ -42,7 +42,7 @@ $(ARMPKGS):
 .PHONY: arm $(ARMPKGS)
 
 # debug
-debug: pre-build $(DEBUGPKGS)
+debug: $(DEBUGPKGS)
 
 $(DEBUGPKGS):
 	$(INFO)
@@ -51,7 +51,7 @@ $(DEBUGPKGS):
 .PHONY: debug $(DEBUGPKGS)
 
 # test
-test: pre-build
+test: 
 	go test -race ./... | grep --line-buffered -v 'no test files'
 
 .PHONY: test
@@ -60,24 +60,13 @@ test: pre-build
 initcover:
 	@echo "mode: count" > cover.out
 
-cover: pre-build initcover
+cover: initcover
 	go test -race -coverprofile=cover.out ./...
 
 coveralls: cover
 	goveralls -coverprofile=cover.out -service=circle-ci -repotoken=$(COVERALLS_TOKEN)
 
 .PHONY: initcover cover coveralls
-
-#
-# Build Environment
-#
-
-pre-build: envcheck
-
-envcheck:
-	@test "$(shell go version)" \= "go version go1.10 linux/amd64" || printf "\nPlease install go 1.10 from https://golang.org/dl/\n\n"
-
-.PHONY: pre-build envcheck
 
 #
 # Help
