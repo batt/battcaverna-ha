@@ -17,6 +17,7 @@
 *.profile
 Session.vim
 cmd/gpio/gpio
+cmd/sipo/sipo
 cmd/battcaverna/battcaverna
 cover.out
 tags

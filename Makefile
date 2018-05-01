@@ -5,6 +5,7 @@
 # Go Packages
 PKGS = \
 	cmd/gpio \
+	cmd/sipo \
 	cmd/battcaverna 
 ARMPKGS = $(PKGS:%=arm-%)
 BUILDPKGS = $(PKGS:%=build-%)
