@@ -1,6 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"log"
+	"os"
+	"strconv"
+
 	"github.com/batt/battcaverna-ha/drivers"
 )
 
@@ -15,7 +20,15 @@ func main() {
 	defer load.Close()
 	sipo := drivers.NewSipo(clk, miso, mosi, load)
 
-	for i := byte(0); i < 255; i++ {
-		sipo.TransferByte(i)
+	var out []byte
+	for _, d := range os.Args[1:] {
+		data, err := strconv.ParseInt(d, 16, 9)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		out = append(out, byte(data))
 	}
+
+	in := sipo.Transfer(out)
+	fmt.Println(in)
 }
