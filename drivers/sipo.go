@@ -20,7 +20,7 @@ const (
 	halfPeriod  = 1 * time.Millisecond
 	clkDefault  = false
 	mosiDefault = false
-	loadDefault = false
+	loadDefault = true
 )
 
 func NewSipo(clk, miso, mosi, load PinMover) *Sipo {
@@ -51,11 +51,13 @@ func (s *Sipo) loadPulse() {
 func (s *Sipo) transferByte(b byte) byte {
 	in := byte(0)
 	for i := uint(0); i < 8; i++ {
-		s.mosi.SetValue(b&(1<<i) != 0)
-		s.clkPulse()
+		s.mosi.SetValue(b&0x80 != 0)
+		b <<= 1
+		in <<= 1
 		if s.miso.Value() {
-			in |= (1 << i)
+			in |= 1
 		}
+		s.clkPulse()
 	}
 
 	return in

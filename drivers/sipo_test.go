@@ -53,13 +53,13 @@ func TestSipo(t *testing.T) {
 	mosi := NewPinMock("MO", nil, buffer)
 	load := NewPinMock("LD", nil, buffer)
 	s := NewSipo(clk, miso, mosi, load)
-	check := "CK0MO0LD0"
+	check := "CK0MO0LD1"
 	if buffer.String() != check {
 		t.Fatalf("want %v, got %v\n", check, buffer)
 	}
 	L := "MO0CK1CK0"
 	H := "MO1CK1CK0"
-	LOAD := "LD1LD0"
+	LOAD := "LD0LD1"
 	//send 0x00
 	check += LOAD
 	check += L + L + L + L + L + L + L + L
@@ -94,11 +94,11 @@ func TestSipo(t *testing.T) {
 
 	//send 0x55
 	check += LOAD
-	check += H + L + H + L + H + L + H + L
+	check += L + H + L + H + L + H + L + H
 	check += LOAD
 
 	//read 0x55
-	rbuffer.WriteString("10101010")
+	rbuffer.WriteString("01010101")
 	in = s.TransferByte(0x55)
 	if buffer.String() != check {
 		t.Fatalf("want %v, got %v\n", check, buffer)
@@ -111,13 +111,12 @@ func TestSipo(t *testing.T) {
 	//send 0x23 0x34
 	check3 := []byte{0x23, 0x34}
 	check += LOAD
-	check += H + H + L + L + L + H + L + L
-	check += L + L + H + L + H + H + L + L
+	check += L + L + H + L + L + L + H + H
+	check += L + L + H + H + L + H + L + L
 	check += LOAD
 
-	// read LSB first 0x23 0x34 -> 00100011(0x23) 00110100(0x34)
-	// NOTE: LSB first!!
-	rbuffer.WriteString("1100010000101100")
+	// read MSB first 0x23 0x34 -> 00100011(0x23) 00110100(0x34)
+	rbuffer.WriteString("0010001100110100")
 
 	in3 := s.Transfer(check3)
 	if buffer.String() != check {
