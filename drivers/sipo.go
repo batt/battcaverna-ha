@@ -17,7 +17,7 @@ type Sipo struct {
 }
 
 const (
-	halfPeriod  = 1 * time.Millisecond
+	halfPeriod  = 250 * time.Microsecond
 	clkDefault  = false
 	mosiDefault = false
 	loadDefault = true
